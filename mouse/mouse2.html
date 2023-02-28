@@ -23,7 +23,7 @@ const scoreElem = document.getElementById("score");
 const timeElem = document.getElementById("time"); // 새로 추가된 요소
 let score = 0;
 let mouseInterval;
-let mouseSpeed = 800;
+let mouseSpeed = 1000;
 const minSpeed = 200; // 쥐의 이동 속도가 이보다 빠르게 될 수 없습니다.
 let mouseX;
 let mouseY;
@@ -85,7 +85,7 @@ function updateTime() {
       clearTimeout(timeout); // clear the timeout
     }
     if (score % 10 === 0 && mouseSpeed > minSpeed) { // 10점마다 쥐의 이동 속도를 빠르게 합니다.
-    mouseSpeed -= 100;
+    mouseSpeed -= 10;
     clearInterval(mouseInterval);
     mouseInterval = setInterval(moveMouse, mouseSpeed);
     }
