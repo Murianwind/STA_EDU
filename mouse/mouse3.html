@@ -30,6 +30,11 @@ let mouseY;
 const mouseImage = new Image();
 mouseImage.src = "mouse.png";
 const audioFiles = ["horse.mp3", "cow.mp3"];
+const audioObjects = audioFiles.map((file) => {
+  const audio = new Audio(file);
+  audio.load(); // audio 객체를 미리 로드합니다.
+  return audio;
+});
 let timeout;
 let startTime; // 시작 시간
 
@@ -65,7 +70,8 @@ function handleMouseClick(event) {
     score += 10;
     scoreElem.innerText = "점수: " + score;
     const randomIndex = Math.floor(Math.random() * audioFiles.length);
-    const audio = new Audio(audioFiles[randomIndex]);
+    const audio = audioObjects[randomIndex];
+    audio.currentTime = 0; // 이전 재생이 끝나지 않았더라도, 일단 처음부터 재생합니다.
     audio.play();
 
     // 5초 동안 클릭 방지
