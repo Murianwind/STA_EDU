@@ -70,15 +70,29 @@ function handleMouseClick(event) {
   }
   const clickX = event.offsetX;
   const clickY = event.offsetY;
-  if (clickX >= mouseX && clickX <= mouseX + mouseImage.width && clickY >= mouseY && clickY <= mouseY + mouseImage.height) {
-score += 10;
-scoreElem.innerText = "점수: " + score;
-playRandomAudio(); // 랜덤한 동물 소리 재생
-if (mouseSpeed > minSpeed) {
-mouseSpeed -= 10; // 쥐 이동 속도를 빠르게 합니다.
-clearInterval(mouseInterval);
-mouseInterval = setInterval(moveMouse, mouseSpeed);
-}
+if (clickX >= mouseX && clickX <= mouseX + mouseImage.width && clickY >= mouseY && clickY <= mouseY + mouseImage.height) {
+      score += 10;
+      scoreElem.innerText = "점수: " + score;
+      const randomIndex = Math.floor(Math.random() * audioFiles.length);
+      const audio = new Audio(audioFiles[randomIndex]);
+      audio.play();/ 랜덤한 동물 소리 재생
+    }
+    if (score === 100) {
+      clearInterval(mouseInterval);
+      canvas.removeEventListener("click", handleMouseClick);
+      startButton.addEventListener("click", startGame);
+      startButton.innerText = "Restart";
+      startButton.disabled = false;
+      scoreElem.innerText = "점수:" + score + " (Game Over!)";
+      const messageElem = document.createElement("div");
+      document.body.appendChild(messageElem);
+      clearTimeout(timeout); // clear the timeout
+    }
+    if (score % 10 === 0 && mouseSpeed > minSpeed) { // 10점마다 쥐의 이동 속도를 빠르게 합니다.
+    mouseSpeed -= 50;
+    clearInterval(mouseInterval);
+    mouseInterval = setInterval(moveMouse, mouseSpeed);
+    }
 disableMouseClick = true; // 5초 동안 클릭 불가능한 상태로 변경합니다.
 setTimeout(() => {
 disableMouseClick = false;
