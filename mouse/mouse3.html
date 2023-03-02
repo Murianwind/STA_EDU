@@ -24,7 +24,7 @@ const timeElem = document.getElementById("time"); // 새로 추가된 요소
 let score = 0;
 let mouseInterval;
 let mouseSpeed = 1000;
-const minSpeed = 200; // 쥐의 이동 속도가 이보다 빠르게 될 수 없습니다.
+const minSpeed = 350; // 쥐의 이동 속도가 이보다 빠르게 될 수 없습니다.
 let mouseX;
 let mouseY;
 const mouseImage = new Image();
@@ -47,7 +47,7 @@ function startGame() {
   clearInterval(mouseInterval); // 마우스 인터벌 초기화
   mouseInterval = setInterval(moveMouse, mouseSpeed);
   canvas.addEventListener("click", handleMouseClick);
-  timeout = setTimeout(handleTimeout, 60000);
+  timeout = setTimeout(handleTimeout, 180000);
   startTime = Date.now();
   updateTime();
 }
@@ -74,11 +74,11 @@ function handleMouseClick(event) {
     audio.currentTime = 0; // 이전 재생이 끝나지 않았더라도, 일단 처음부터 재생합니다.
     audio.play();
 
-    // 5초 동안 클릭 방지
+    // 3초 동안 클릭 방지
     canvas.removeEventListener("click", handleMouseClick);
     setTimeout(() => {
       canvas.addEventListener("click", handleMouseClick);
-    }, 5000);
+    }, 3000);
   }
   // 게임 종료 조건 처리
   if (score === 100) {
