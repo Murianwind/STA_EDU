@@ -45,15 +45,6 @@ function startGame() {
   startTime = Date.now();
   updateTime();
 }
-	    
-function updateTime() {
-  const elapsedTime = Date.now() - startTime; // 경과 시간 (밀리초 단위)
-  const minutes = Math.floor(elapsedTime / 60000); // 분
-  const seconds = Math.floor((elapsedTime % 60000) / 1000); // 초
-  const timeStr = minutes + ":" + (seconds < 10 ? "0" : "") + seconds; // 시간 문자열
-  timeElem.innerText = "플레이 시간: " + timeStr; // 시간 표시
-  setTimeout(updateTime, 1000); // 1초마다 업데이트
-}
 
   function moveMouse() {
     const x = Math.floor(Math.random() * (canvas.width - mouseImage.width));
@@ -100,7 +91,6 @@ function handleMouseClick(event) {
   }
 }
 
-
 function handleTimeout() {
   clearInterval(mouseInterval);
   canvas.removeEventListener("click", handleMouseClick);
@@ -110,8 +100,25 @@ function handleTimeout() {
   scoreElem.innerText = score + " (Game Failed!)";
   const messageElem = document.createElement("div");
   document.body.appendChild(messageElem);
-  clearTimeout(timeout);
+  
+  clearTimeout(timeout); // clear the timeout
+  
+  // 중지된 timeoutID로 updateTime 함수 중지
+  clearTimeout(timeUpdateTimeoutID); 
 }
+
+// updateTime 함수 호출 시 반환되는 timeoutID를 저장할 변수
+let timeUpdateTimeoutID; 
+
+function updateTime() {
+  const elapsedTime = Date.now() - startTime;
+  const minutes = Math.floor(elapsedTime / 60000);
+  const seconds = Math.floor((elapsedTime % 60000) / 1000);
+  const timeStr = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  timeElem.innerText = "플레이 시간: " + timeStr;
+  timeUpdateTimeoutID = setTimeout(updateTime, 1000); // 반환된 timeoutID 저장
+}
+
 
   startButton.addEventListener("click", startGame);
 </script>
