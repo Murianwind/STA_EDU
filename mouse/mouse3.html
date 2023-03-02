@@ -30,6 +30,15 @@ let mouseY;
 const mouseImage = new Image();
 mouseImage.src = "mouse.png";
 const audioFiles = ["horse.mp3", "cow.mp3"];
+const audioElements = [];
+
+for (let i = 0; i < audioFiles.length; i++) {
+  const audio = new Audio();
+  audio.src = audioFiles[i];
+  audio.preload = "auto";
+  audioElements.push(audio);
+}
+
 let timeout;
 let startTime; // 시작 시간
 
@@ -65,8 +74,9 @@ function handleMouseClick(event) {
     score += 10;
     scoreElem.innerText = "점수: " + score;
     const randomIndex = Math.floor(Math.random() * audioFiles.length);
-    const audio = new Audio(audioFiles[randomIndex]);
-    audio.play();
+    const audio = audioElements[randomIndex];
+    if (audio.readyState === 4) {
+      audio.play();
 
     // 5초 동안 클릭 방지
     canvas.removeEventListener("click", handleMouseClick);
