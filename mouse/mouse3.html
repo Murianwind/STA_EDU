@@ -99,6 +99,7 @@ function handleMouseClick(event) {
     const messageElem = document.createElement("div");
     document.body.appendChild(messageElem);
     clearTimeout(timeout); // clear the timeout
+    clearTimeout(timeUpdateTimeoutID); 
   }
   if (score % 10 === 0 && mouseSpeed > minSpeed) { // 10점마다 쥐의 이동 속도를 빠르게 합니다.
     mouseSpeed -= 50;
@@ -116,9 +117,7 @@ function handleTimeout() {
   scoreElem.innerText = score + " (Game Failed!)";
   const messageElem = document.createElement("div");
   document.body.appendChild(messageElem);
-  
   clearTimeout(timeout); // clear the timeout
-  
   // 중지된 timeoutID로 updateTime 함수 중지
   clearTimeout(timeUpdateTimeoutID); 
 }
