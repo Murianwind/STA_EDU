@@ -85,7 +85,7 @@ function updateTime() {
       clearTimeout(timeout); // clear the timeout
     }
     if (score % 10 === 0 && mouseSpeed > minSpeed) { // 10점마다 쥐의 이동 속도를 빠르게 합니다.
-    mouseSpeed -= 100;
+    mouseSpeed -= 50;
     clearInterval(mouseInterval);
     mouseInterval = setInterval(moveMouse, mouseSpeed);
     }
