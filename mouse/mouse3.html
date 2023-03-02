@@ -47,7 +47,7 @@ function startGame() {
   clearInterval(mouseInterval); // 마우스 인터벌 초기화
   mouseInterval = setInterval(moveMouse, mouseSpeed);
   canvas.addEventListener("click", handleMouseClick);
-  timeout = setTimeout(handleTimeout, 180000);
+  timeout = setTimeout(handleTimeout, 180001);
   startTime = Date.now();
   updateTime();
 }
