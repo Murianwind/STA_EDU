@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mouse Catching Game</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <div>
+      <button id="start-button">Start</button>
+      <span id="score">점수: 0</span>
+      <span id="time">플레이 시간: 0:00</span>
+    </div>
+    <script>
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+const startButton = document.getElementById("start-button");
+const scoreElem = document.getElementById("score");
+const timeElem = document.getElementById("time"); // 새로 추가된 요소
+let score = 0;
+let mouseInterval;
+let mouseSpeed = 1000;
+const minSpeed = 200; // 쥐의 이동 속도가 이보다 빠르게 될 수 없습니다.
+let mouseX;
+let mouseY;
+const mouseImage = new Image();
+mouseImage.src = "mouse.png";
+const audioFiles = ["horse.mp3", "cow.mp3"];
+let timeout;
+let startTime; // 시작 시간
+let disableMouseClick = false; // 쥐를 클릭할 수 없는 시간인지 여부를 나타내는 변수
+
+function startGame() {
+  score = 0;
+  startButton.disabled = true;
+  startButton.removeEventListener("click", startGame);
+  scoreElem.innerText = "점수: " + score;
+  mouseInterval = setInterval(moveMouse, mouseSpeed);
+  canvas.addEventListener("click", handleMouseClick);
+  timeout = setTimeout(handleTimeout, 60000); // set timeout for 1 minutes
+  startTime = Date.now(); // 게임 시작 시간
+  updateTime(); // 시간 업데이트 시작
+}
+
+function updateTime() {
+  const elapsedTime = Date.now() - startTime; // 경과 시간 (밀리초 단위)
+  const minutes = Math.floor(elapsedTime / 60000); // 분
+  const seconds = Math.floor((elapsedTime % 60000) / 1000); // 초
+  const timeStr = minutes + ":" + (seconds < 10 ? "0" : "") + seconds; // 시간 문자열
+  timeElem.innerText = "플레이 시간: " + timeStr; // 시간 표시
+  setTimeout(updateTime, 1000); // 1초마다 업데이트
+}
+
+function moveMouse() {
+  const x = Math.floor(Math.random() * (canvas.width - mouseImage.width));
+  const y = Math.floor(Math.random() * (canvas.height - mouseImage.height));
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(mouseImage, x, y);
+  mouseX = x;
+  mouseY = y;
+}
+
+function handleMouseClick(event) {
+  if (disableMouseClick) {
+    return; // 5초 동안 쥐를 클릭할 수 없는 상태인 경우, 클릭을 무시합니다.
+  }
+  const clickX = event.offsetX;
+  const clickY = event.offsetY;
+  if (clickX >= mouseX && clickX <= mouseX + mouseImage.width && clickY >= mouseY && clickY <= mouseY + mouseImage.height) {
+score++;
+scoreElem.innerText = "점수: " + score;
+playRandomAudio(); // 랜덤한 동물 소리 재생
+if (mouseSpeed > minSpeed) {
+mouseSpeed -= 10; // 쥐 이동 속도를 빠르게 합니다.
+clearInterval(mouseInterval);
+mouseInterval = setInterval(moveMouse, mouseSpeed);
+}
+disableMouseClick = true; // 5초 동안 클릭 불가능한 상태로 변경합니다.
+setTimeout(() => {
+disableMouseClick = false;
+}, 5000);
+}
+}
+
+function playRandomAudio() {
+const audioIndex = Math.floor(Math.random() * audioFiles.length);
+const audioFile = audioFiles[audioIndex];
+const audio = new Audio(audioFile);
+audio.play();
+}
+
+function handleTimeout() {
+clearInterval(mouseInterval);
+canvas.removeEventListener("click", handleMouseClick);
+startButton.disabled = false;
+startButton.addEventListener("click", startGame);
+alert("게임 종료! 최종 점수는 " + score + "점입니다.");
+}
+
+startButton.addEventListener("click", startGame);
+</script>
+
+  </body>
+</html>
