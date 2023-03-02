@@ -33,11 +33,19 @@ const audioFiles = ["horse.mp3", "cow.mp3"];
 const audioObjects = audioFiles.map((file) => {
   const audio = new Audio(file);
   audio.load(); // audio 객체를 미리 로드합니다.
+  audio.addEventListener("canplaythrough", handleAudioLoad);
   return audio;
 });
+let loadedAudioCount = 0; // 로드된 효과음 파일의 개수를 세는 변수
 let timeout;
 let startTime; // 시작 시간
 
+function handleAudioLoad() {
+  loadedAudioCount++; // 로드된 효과음 파일 개수 증가
+  if (loadedAudioCount === audioFiles.length) { // 모든 효과음 파일 로드 완료
+    startButton.disabled = false; // 스타트 버튼 활성화
+  }
+}
 function startGame() {
   score = 0;
   startButton.disabled = true;
@@ -47,7 +55,7 @@ function startGame() {
   clearInterval(mouseInterval); // 마우스 인터벌 초기화
   mouseInterval = setInterval(moveMouse, mouseSpeed);
   canvas.addEventListener("click", handleMouseClick);
-  timeout = setTimeout(handleTimeout, 180001);
+  timeout = setTimeout(handleTimeout, 181000);
   startTime = Date.now();
   updateTime();
 }
