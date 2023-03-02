@@ -39,12 +39,14 @@ function startGame() {
   startButton.removeEventListener("click", startGame);
   scoreElem.innerText = "점수: " + score;
   mouseSpeed = 1000; // 마우스 속도 초기화
+  clearInterval(mouseInterval); // 마우스 인터벌 초기화
   mouseInterval = setInterval(moveMouse, mouseSpeed);
   canvas.addEventListener("click", handleMouseClick);
   timeout = setTimeout(handleTimeout, 60000);
   startTime = Date.now();
   updateTime();
 }
+
 
   function moveMouse() {
     const x = Math.floor(Math.random() * (canvas.width - mouseImage.width));
