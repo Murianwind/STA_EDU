@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 상세 - 하단 여백 최종 수정</title>
+    <style>
+        :root { --primary-black: #000; }
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #eee; }
+        
+        .phone-frame { 
+            width: 375px; 
+            height: 812px; 
+            background: white; 
+            border: 12px solid #333; 
+            border-radius: 50px; /* 곡률을 더 강조 */
+            padding: 40px 20px; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column;
+            position: relative;
+            overflow: hidden; /* 내부 요소가 곡선을 넘지 않도록 */
+        }
+
+        /* 중간 콘텐츠 영역 */
+        .content-scroll {
+            flex: 1; /* 남은 공간을 다 차지하여 버튼을 아래로 밀어냄 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-image { width: 100%; aspect-ratio: 1/1; border: 2px solid var(--primary-black); display: flex; justify-content: center; align-items: center; margin-bottom: 24px; }
+        .title-section { text-align: center; margin-bottom: 30px; }
+        .quantity-section { text-align: center; margin-bottom: 20px; }
+        .stepper { display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .qty-input { width: 60px; height: 40px; border: 1.5px solid var(--primary-black); text-align: center; font-size: 18px; font-weight: bold; }
+        .price-display { font-size: 20px; font-weight: 600; margin-top: 15px; }
+
+        /* 하단 버튼 영역 - 핵심 수정 부분 */
+        .action-buttons { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            padding-bottom: 50px; /* 바닥 곡선으로부터의 절대적인 거리 확보 */
+            background: white;
+            z-index: 10;
+        }
+        
+        .btn-action { 
+            width: 100%; 
+            padding: 18px; /* 버튼 자체 볼륨감 확대 */
+            border: 2px solid var(--primary-black); 
+            border-radius: 35px; 
+            background: white; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .home-indicator {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 5px;
+            background: #ebebeb;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <div class="content-scroll">
+        <div class="product-image">
+            <svg width="60" height="60"><line x1="0" y1="0" x2="60" y2="60" stroke="black"/><line x1="60" y1="0" x2="0" y2="60" stroke="black"/></svg>
+        </div>
+
+        <div class="title-section">
+            <h1 style="font-size:22px; margin:0;">Awesome Product Name</h1>
+            <div style="color:#888; font-size:14px;">Brand/Category</div>
+        </div>
+
+        <div class="quantity-section">
+            <div style="margin-bottom:10px; font-size:14px; font-weight:bold;">Quantity Selector</div>
+            <div class="stepper">
+                <button class="btn-circle" style="width:35px; height:35px;" onclick="adjustQty(-1)">−</button>
+                <input type="number" class="qty-input" id="qty-input" value="1" oninput="validateAndUpdate()">
+                <button class="btn-circle" style="width:35px; height:35px;" onclick="adjustQty(1)">+</button>
+            </div>
+            <div class="price-display">Price: $<span id="total-price">99.99</span></div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn-action" onclick="alert('Buy Success')">
+            <span>Buy Now</span><span>&rsaquo;</span>
+        </button>
+        <button class="btn-action" onclick="alert('Cart Success')">
+            <span>Add to Cart</span><span>&rsaquo;</span>
+        </button>
+    </div>
+
+    <div class="home-indicator"></div>
+</div>
+
+<script>
+    /* 스크립트 로직 동일 */
+    const unitPrice = 99.99;
+    const qtyInput = document.getElementById('qty-input');
+    const priceDisplay = document.getElementById('total-price');
+
+    // [추가] 페이지 로드 시 기존에 저장된 수량 불러오기
+    window.onload = () => {
+        const savedQty = localStorage.getItem('user_quantity');
+        if (savedQty) {
+            updateValue(parseInt(savedQty));
+        }
+    };
+
+    function adjustQty(delta) {
+        let val = parseInt(qtyInput.value) || 1;
+        updateValue(val + delta);
+    }
+
+    function updateValue(num) {
+        if (num < 1) num = 1;
+        if (num > 999) num = 999;
+        
+        qtyInput.value = num;
+        priceDisplay.innerText = (num * unitPrice).toFixed(2);
+
+        // [핵심] 사용자의 브라우저에 수량 저장
+        localStorage.setItem('user_quantity', num);
+    }
+</script>
+
+</body>
+</html>
